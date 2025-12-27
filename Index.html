@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP Nikola Rabóvsky</title>
+    <style>
+       /* Custom font */
+       @font-face {
+            font-family: 'Arimo';
+            src: url('/Users/nikolairabovskiy/Desktop/rabovsky.co/Arimo-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arimo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #F7F7F7;
+            color: black;
+        }
+        
+        /* Basic layout */
+        header {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            position: relative;
+            direction: ltr; /* Force left-to-right layout for header */
+        }
+        
+        footer {
+            padding: 20px;
+            background-color: transparent;
+            width: 100%;
+        }
+        
+        /* Language toggle switch - MODIFIED for fixed position */
+        .language-toggle {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 20px !important;
+        top: 50%;
+        transform: translateY(-50%) scale(0.67);
+        transform-origin: left center;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        }
+
+        .language-toggle:hover {
+        color: #32964E;
+        }
+        
+        .language-toggle .lang-he {
+        order: 1;
+        font-size: 1.6em; /* Одинаковый размер */
+        vertical-align: middle; /* Выравнивание по центру */
+        }
+
+        
+        .language-toggle .switch {
+            order: 2;
+            margin: 0 10px;
+        }
+        
+        .language-toggle .lang-en {
+        order: 3;
+        font-size: 1.8em; /* Одинаковый размер */
+        vertical-align: middle; /* Выравнивание по центру */
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin: 0 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        /* Modified slider for language toggle to match the new black/white theme */
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+        transition: .4s, border-color 0.3s ease;
+        border-radius: 34px;
+        border: 2px solid black;
+        }
+
+        .language-toggle:hover .slider {
+        border-color: #32964E;
+        }
+
+        .language-toggle:hover .slider:before {
+        background-color: #32964E;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px; /* Adjusted to center vertically */
+            background-color: black; /* Changed from white to black */
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: transparent;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Title and contact positioning - Fixed regardless of direction */
+        .site-title {
+            text-align: center;
+            font-size: 0.8em;
+        }
+        
+        .site-title a {
+            color: black; /* Changed from white to black */
+            text-decoration: none;
+        }
+        
+        .contact-info {
+            position: absolute;
+            right: 20px !important; /* Fixed position regardless of direction */
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+        }
+        
+        /* Grid layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop */
+            gap: 24px; /* Increased gap by 20% from 20px to 24px */
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr; /* 1 column for mobile */
+            }
+            
+            header {
+                padding: 60px 10px 20px;
+                height: auto;
+                flex-direction: column;
+            }
+            
+            /* MODIFIED: Reduced size for mobile and kept vertical alignment */
+            .language-toggle {
+                left: 10px !important;
+                top: 10px;
+                transform: none;
+                transform: scale(0.67); /* Reduced by 1.5x (1/1.5 = 0.67) */
+                transform-origin: left top;
+                height: 34px; /* Ensure consistent height */
+            }
+            
+            .site-title {
+                margin-top: 10px;
+                font-size: 0.9em; /* Reduced from 1.2em to 0.9em (75%) */
+            }
+            
+            /* MODIFIED: Reduced size for mobile and kept vertical alignment */
+            .contact-info {
+                right: 10px !important;
+                top: 10px;
+                transform: none;
+                transform: scale(0.67); /* Reduced by 1.5x */
+                transform-origin: right top;
+                height: 34px; /* Ensure consistent height */
+                font-size: 0.9em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            footer {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+        
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns for landscape */
+            }
+        }
+        
+        .grid-item {
+            position: relative;
+            padding-top: 82.5%; /* 4:3 Aspect Ratio increased by 10% (from 75% to 82.5%) */
+            overflow: hidden;
+            background-color: transparent;
+            cursor: pointer;
+            border-radius: 0; /* Removed rounded corners */
+        }
+        
+        .grid-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0; /* Removed rounded corners */
+        }
+        
+        /* Page content */
+        .page-content {
+            min-height: 60vh;
+        }
+        
+        /* Hide pages by default */
+        .page {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 40px;
+        }
+        
+        .social-links {
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            margin-right: 10px;
+            color: black; /* Changed from white to black */
+        }
+        
+        [dir="ltr"] .social-links a {
+            margin-right: 10px;
+            margin-left: 0;
+        }
+        
+        [dir="rtl"] .social-links a {
+            margin-left: 10px;
+            margin-right: 0;
+        }
+        
+        /* Link styles - Modified for black text on white background */
+        a {
+            color: black; /* Changed from white to black */
+            text-decoration: none;
+            transition: color 0.3s ease; /* Added smooth transition */
+        }
+        
+        a:hover {
+            color: #32964E; /* Changed to darker blue */
+            text-decoration: none; /* Removed underline on hover */
+        }
+        
+        /* Project styling */
+        .project-content {
+            margin: 20px 0;
+        }
+        
+        /* Added text styles for project pages */
+        .project-title {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em; /* Reduced from 2em to 1.5em (75%) */
+        }
+        
+        .project-subtitle {
+            font-size: 1.125em; /* Reduced from 1.5em to 1.125em (75%) */
+            margin-bottom: 15px;
+            color: #404040; /* Changed from #e0e0e0 to a dark gray for better contrast */
+        }
+        
+        .project-text {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .project-link {
+        font-weight: normal; /* Убрана жирность */
+        color: #32964E; /* Изменен цвет на синий */
+        transition: color 0.3s ease;
+        text-decoration: none; /* Убрано подчеркивание */
+        }
+
+        .project-link:hover {
+        color: #32964E; /* Тот же цвет при наведении */
+        text-decoration: none; /* Убрано подчеркивание при наведении */
+        }
+        
+        .video-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            height: 50vh; /* 50% от высоты окна */
+            position: relative;
+        }
+        
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Responsive video containers */
+        @media (max-width: 768px) {
+            .video-container {
+                height: 40vh; /* Немного меньше на мобильных */
+            }
+        }
+        
+        .project-description {
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="language-toggle">
+            <span class="lang-he">עב</span>
+            <label class="switch">
+                <input type="checkbox" id="languageToggle">
+                <span class="slider"></span>
+            </label>
+            <span class="lang-en">en</span>
+        </div>
+        
+        <div class="site-title content-he">
+            <p  class="project-title"><a href="#" data-page="home">צלמ ניקולאי רבובסקי</a></p>
+        </div>
+        
+        <div class="site-title content-en" style="display: none;">
+            <p  class="project-title"><a href="#" data-page="home">Cinematography by Nikola Rabóvsky</a></p>
+        </div>
+        
+        <div class="contact-info">
+            <p>nikolai.rabovskiy@gmail.com</p>
+            <p>+972 55 2947603</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main class="page-content">
+            <!-- Home Page -->
+            <section id="home" class="page active">
+                <div class="grid-container">
+                    <!-- 12 grid items with 4:3 aspect ratio as links -->
+                    <a href="#" class="grid-item" data-page="sabauri">
+                        <img src="./Media/sabauri.webp" alt="Saba Uri">
+                    </a>
+                    <a href="#" class="grid-item" data-page="inn7">
+                        <img src="./Media/inn7.webp" alt="Inn7">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Awakening">
+                        <img src="./Media/Awakening.webp" alt="Awakening">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Breathing">
+                        <img src="./Media/ARRI.webp" alt="Breathing">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Iowa">
+                        <img src="./Media/IOWA.webp" alt="Iowa">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Nevesta">
+                        <img src="./Media/Nevesta2.webp" alt="Nevesta">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Kvachanti">
+                        <img src="./Media/Kvachanty.webp" alt="Kvachanti">
+                    </a>
+                    <a href="#" class="grid-item" data-page="sH1pu4Ka!">
+                        <img src="./Media/Shipuchka.webp" alt="sH1pu4Ka!">
+                    </a>
+                    <a href="#" class="grid-item" data-page="Silentwitness">
+                        <img src="./Media/Silentwitness2.JPEG" alt="Silentwitness">
+                    </a>
+                </div>
+            </section>
+            
+            <!-- Project Pages -->
+
+            <!-- Saba Uri - Modified with all 4 text styles -->
+            <section id="sabauri" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <p class="project-title">סבא אורי</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/RUL5YUXp8w8?si=rAfCR9rLamLcZW1y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="project-description">
+                            <p class="project-text">פרויקט זה מציג את הגישה היצירתית שלי לאמנות בתנועה. באמצעות שילוב של טכניקות צילום מתקדמות ועריכה מדויקת, יצרתי חוויה חזותית המשקפת את התפיסה האמנותית שלי.</p>
+                            <p class="project-text">לפרטים נוספים על תהליך היצירה, בקרו <a href="#" class="project-link" target="_blank">בדף הפרויקט שלי</a> או צרו קשר ישירות.</p>
+                            <p class="project-text">ישראל!  2024</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <p class="project-title">Saba Uri</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/RUL5YUXp8w8?si=rAfCR9rLamLcZW1y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="project-description">
+                            <p class="project-text">This project showcases my creative approach to art in motion. Through a combination of advanced filming techniques and precise editing, I created a visual experience that reflects my artistic vision.</p>
+                            <p class="project-text">For more details about the creative process, visit <a href="#" class="project-link" target="_blank">my project page</a> or contact me directly.</p>
+                            <p class="project-text">Israel ! 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- inn7 Page -->
+            <section id="inn7" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <p class="project-title">INN7</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/842454740?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" title="INN7"></iframe>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <p class="project-title">INN7</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/842454740?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" title="INN7"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Project 3 Page -->
+            <section id="Awakening" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 3 full image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 3 full image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Project 4 Page -->
+            <section id="Breathing" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/672364845?h=40e9853997" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/672364845?h=40e9853997" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Project 5 Page -->
+            <section id="Iowa" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 5 full image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 5 full image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Project 6 Page -->
+            <section id="Nevesta" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 6 full image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <div class="grid-item">
+                            <img src="/api/placeholder/800/600" alt="Project 6 full image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kvachanti -->
+            <section id="Kvachanti" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <p class="project-title">Kvachanti</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/673623112?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" title="Kvachanti Ночь Нежна"></iframe>
+                        </div>
+                        <div class="project-description">
+                            <p class="project-text">פרויקט זה מציג את הגישה היצירתית שלי לאמנות בתנועה. באמצעות שילוב של טכניקות צילום מתקדמות ועריכה מדויקת, יצרתי חוויה חזותית המשקפת את התפיסה האמנותית שלי.</p>
+                            <p class="project-text">לפרטים נוספים על תהליך היצירה, בקרו <a href="#" class="project-link" target="_blank">בדף הפרויקט שלי</a> או צרו קשר ישירות.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <p class="project-title">Kvachanti</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/673623112?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" title="Kvachanti Ночь Нежна"></iframe>
+                        </div>
+                        <div class="project-description">
+                            <p class="project-text">This project showcases my creative approach to art in motion. Through a combination of advanced filming techniques and precise editing, I created a visual experience that reflects my artistic vision.</p>
+                            <p class="project-text">For more details about the creative process, visit <a href="#" class="project-link" target="_blank">my project page</a> or contact me directly.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Project 4 Page -->
+            <section id="sH1pu4Ka!" class="page">
+                <div class="content-he">
+                    <div class="project-content">
+                        <p class="project-title">sH1pu4Ka</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/672364845?h=40e9853997" frameborder="0" allowfullscreen></iframe> 
+                        </div>
+                        
+                        <p class="project-text">רוסיה 2022</p>
+                    </div>
+                </div>
+                
+                <div class="content-en" style="display: none;">
+                    <div class="project-content">
+                        <p class="project-title">sH1pu4Ka!</p>
+                        <div class="video-container">
+                            <iframe src="https://player.vimeo.com/video/672364845?h=40e9853997" frameborder="0" allowfullscreen></iframe>   
+                        </div>
+                        <p class="project-text">Russia 2022</p>
+                    </div>
+                </div>
+            </section>
+            
+
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="content-he">
+                <p class="project-title">אודות</p>
+
+                <p class="project-text">כצלם וידאו וכמנהל צילום בעל תשוקה, אני מביא גישה ייחודית לסיפור ויזואלי בכל פרויקט. עם כמה שנות ניסיון מאחורי המצלמה, אני מתמחה ביצירת תמונות חיות ומעוררות חושים שמעצימות את עומק הסיפור. עבודתי כוללת פרסומות, קליפים, סרטים קצרים ודוקומנטריים, שתמיד מותאמים לחזון הבמאי וללב הרגשי של הסיפור. אני מיומן בטכניקות תאורה טבעית ומלאכותית, ומשתמש באור כדי לעצב את האווירה והמרקם בכל פריים.</p>
+
+                <p class="project-text"> אני פורח בסביבות עבודה שיתופיות, עובד בשיתוף פעולה קרוב עם במאים, מעצבי הפקה וצוותי מצלמה כדי להשיג את הצילום המושלם. מומחיות טכנית בשילוב עם חוש אמנותי חזק מאפשרים לי להסתגל במהירות לתנאי צילום ואתגרים יצירתיים שונים. אני מיומן במערכות מצלמה ועדשות שונות, ותמיד חוקר טכנולוגיות חדשות כדי לדחוף את גבולות הסיפור הויזואלי.</p>
+                    
+                <p class="project-text">  הרקע שלי באמנויות חזותיות מדליק את התשוקה שלי לקומפוזיציה, דירוג צבעים ועיצוב צילומים חדשניים. אני מאמין שכל פריים צריך לשרת את הסיפור, ולתקשר מתחת לפני השטח ומעבר לדיאלוג. תשומת לב לפרטים ומחויבות לאיכות מגדירים את אופן העבודה שלי, מתכנון טרום הפקה ועד שיתוף פעולה לאחר הפקה.</p>
+                    
+                <p class="project-text"> אני מונע על ידי פרויקטים שמאתגרים את הסטטוס קוו ומעוררים השראה בקהל דרך דימויים עוצמתיים. בין אם מצלמים רגעים אינטימיים של דמויות או נופים רחבים, אני שואף ללכוד את מהות הסיפור עם בהירות ורגש. המטרה שלי היא ליצור חוויות קולנועיות שנשארות בזיכרון גם אחרי שהמסך נכבה</p>
+                
+                    <div class="social-links">
+                    <a href="https://www.instagram.com/nikola.rabovsky/" target="_blank">Instagram</a>
+                    <a href="https://vimeo.com/nikoper" target="_blank">Vimeo</a>
+                    <a href="#" target="_blank">Facebook</a>
+                    <a href="https://www.imdb.com/name/nm16516643/?ref_=ttfc_fcr_cr" target="_blank">IMDB</a>
+                </div>
+            </div>
+            
+            <div class="content-en" style="display: none;">
+
+                <p class="project-title">About Me</p>
+
+                <p class="project-text">    As a passionate cinematographer and director of photography, I bring a unique visual storytelling approach to every project. With several years of experience behind the camera, I specialize in creating vivid, immersive images that enhance narrative depth. My work spans commercials, music videos, short films, and documentaries, always tailored to the director's vision and the story's emotional core. I am skilled in both natural and artificial lighting techniques, using light to sculpt mood and texture in each frame.</p>
+
+                <p class="project-text">    I thrive in collaborative environments, working closely with directors, production designers, and camera crews to achieve the perfect shot. Technical expertise combined with a strong artistic sensibility allows me to adapt quickly to different shooting conditions and creative challenges. I am proficient with a variety of camera systems and lenses, continuously exploring new technologies to push the boundaries of visual storytelling.</p>
+                    
+                <p class="project-text">    My background in visual arts fuels my passion for composition, color grading, and innovative shot design. I believe that every frame should serve the story, communicating subtext and atmosphere beyond dialogue. Attention to detail and a commitment to quality define my workflow, from pre-production planning to post-production collaboration.</p>
+                    
+                <p class="project-text">    I am motivated by projects that challenge the status quo and inspire audiences through powerful imagery. Whether shooting intimate character moments or expansive landscapes, I strive to capture the essence of the story with clarity and emotion. My goal is to create cinematic experiences that resonate long after the screen goes dark.</p>
+                    
+                <div class="social-links">
+                    <a href="https://www.instagram.com/nikola.rabovsky/" target="_blank">Instagram</a>
+                    <a href="https://vimeo.com/nikoper" target="_blank">Vimeo</a>
+                    <a href="#" target="_blank">Facebook</a>
+                    <a href="https://www.imdb.com/name/nm16516643/?ref_=ttfc_fcr_cr" target="_blank">IMDB</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+    <script>
+        // Language toggle functionality
+        const languageToggle = document.getElementById('languageToggle');
+        const contentHe = document.querySelectorAll('.content-he');
+        const contentEn = document.querySelectorAll('.content-en');
+        const htmlTag = document.documentElement;
+        
+        // Set fixed direction for header
+        const header = document.querySelector('header');
+        header.style.direction = 'ltr'; // Forces left-to-right layout
+        
+        // Fix positioning for language toggle and contact info
+        const languageToggleElement = document.querySelector('.language-toggle');
+        const contactInfo = document.querySelector('.contact-info');
+        languageToggleElement.style.left = '20px';
+        contactInfo.style.right = '20px';
+        
+        languageToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Switch to English (LTR)
+                htmlTag.setAttribute('dir', 'ltr');
+                htmlTag.setAttribute('lang', 'en');
+                contentHe.forEach(el => el.style.display = 'none');
+                contentEn.forEach(el => el.style.display = 'block');
+            } else {
+                // Switch to Hebrew (RTL)
+                htmlTag.setAttribute('dir', 'rtl');
+                htmlTag.setAttribute('lang', 'he');
+                contentHe.forEach(el => el.style.display = 'block');
+                contentEn.forEach(el => el.style.display = 'none');
+            }
+        });
+        
+        // Function to stop all videos when navigating away
+        function stopAllVideos() {
+            // Find all iframe elements (videos)
+            const videoFrames = document.querySelectorAll('iframe');
+            
+            videoFrames.forEach(frame => {
+                // Get the current src
+                const currentSrc = frame.src;
+                
+                // Reset the src to stop the video
+                if (currentSrc) {
+                    frame.src = currentSrc;
+                }
+            });
+        }
+        
+        // Page navigation functionality with video stopping
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('[data-page]');
+            if (target) {
+                e.preventDefault();
+                const pageId = target.getAttribute('data-page');
+                const pages = document.querySelectorAll('.page');
+                
+                // Stop all videos when navigating to home
+                if (pageId === 'home') {
+                    stopAllVideos();
+                }
+                
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                document.getElementById(pageId).classList.add('active');
+                
+                // Scroll to top when navigating to a new page
+                window.scrollTo(0, 0);
+                
+                // Update the browser history to enable back button functionality
+                if (pageId !== 'home') {
+                    history.pushState({page: pageId}, '', '#' + pageId);
+                } else {
+                    history.pushState({page: 'home'}, '', window.location.pathname);
+                }
+            }
+        });
+        
+        // Handle browser back button with video stopping
+        window.addEventListener('popstate', function(e) {
+            const pages = document.querySelectorAll('.page');
+            
+            // Default to home if state is empty
+            const pageId = e.state && e.state.page ? e.state.page : 'home';
+            
+            // Stop videos when navigating to home
+            if (pageId === 'home') {
+                stopAllVideos();
+            }
+            
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            // Scroll to top when navigating with browser controls
+            window.scrollTo(0, 0);
+        });
+        
+        // Initialize browser history
+        history.replaceState({page: 'home'}, '', window.location.pathname);
+        
+        // Shuffle grid items on page load
+        function shuffleGrid() {
+            const gridContainer = document.querySelector('.grid-container');
+            const gridItems = Array.from(gridContainer.children);
+            
+            // Fisher-Yates shuffle algorithm
+            for (let i = gridItems.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Don't actually swap DOM elements, just their order in the container
+                gridContainer.insertBefore(gridItems[j], gridItems[i]);
+            }
+        }
+        
+        // Run shuffle on page load
+        document.addEventListener('DOMContentLoaded', shuffleGrid);
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const mediaQuery = window.matchMedia('(max-width: 768px)');
+            if (mediaQuery.matches) {
+                document.querySelector('.language-toggle').style.left = '10px';
+                document.querySelector('.contact-info').style.right = '10px';
+            } else {
+                document.querySelector('.language-toggle').style.left = '20px';
+                document.querySelector('.contact-info').style.right = '20px';
+            }
+        });
+    </script>
+</body>
+</html>
