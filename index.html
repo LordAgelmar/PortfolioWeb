@@ -13,6 +13,13 @@
             font-weight: normal;
             font-style: normal;
         }
+        @font-face {
+            font-family: 'Handjet';
+            src: url('Handjet.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
         
         /* Reset and base styles */
         * {
@@ -40,6 +47,7 @@
             background-color: transparent;
             position: relative;
             direction: ltr; /* Force left-to-right layout for header */
+            min-height: 80px; /* ensure enough height for vertical centering */
         }
         
         footer {
@@ -142,7 +150,33 @@
         /* Title and contact positioning - Fixed regardless of direction */
         .site-title {
             text-align: center;
-            font-size: 1.2em; /* increased 1.5x from 0.8em */
+            font-size: 1.6em; /* 2x from 0.8em */
+            font-family: 'Arimo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            align-self: stretch; /* make site-title fill header height for centering */
+        }
+        /* Ensure the project title inside site-title is reset and centered */
+        .site-title .project-title {
+            margin: 0; /* remove default margins that break centering */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        /* Ensure links inside the site title inherit Handjet and the correct weight */
+        .site-title a {
+            font-family: inherit;
+            font-weight: inherit;
+            text-decoration: none;
+            color: inherit;
+        }
+        /* Explicit rule for the English title block if needed */
+        .site-title.content-en {
+            font-weight: 400;
         }
         
         .site-title a {
@@ -195,8 +229,12 @@
             }
             
             .site-title {
-                margin-top: 10px;
-                font-size: 1.35em; /* mobile size scaled 1.5x from 0.9em */
+                margin-top: 0;
+                font-size: 1.8em; /* 2x from 0.9em */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
             }
             
             /* MODIFIED: Reduced size for mobile and kept vertical alignment */
@@ -204,10 +242,9 @@
                 right: 10px !important;
                 top: 10px;
                 transform: none;
-                transform: scale(0.67); /* Reduced by 1.5x */
                 transform-origin: right top;
                 height: 34px; /* Ensure consistent height */
-                font-size: 0.9em;
+                font-size: 1.35em; /* 1.5x larger in mobile (0.9em * 1.5) */
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
