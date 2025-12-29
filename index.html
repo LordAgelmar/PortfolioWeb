@@ -7,6 +7,7 @@
     <link rel="icon" href="Favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="Favicon.ico" type="image/x-icon">
     <title>DP Nikola Rabóvsky</title>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
        /* Custom font */
        @font-face {
@@ -411,6 +412,12 @@
             display: inline-block;
             white-space: nowrap;
         }
+
+        #retro-computer {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 24px;
+        }
     </style>
 </head>
 <body>
@@ -442,6 +449,7 @@
         <main class="page-content">
             <!-- Home Page -->
             <section id="home" class="page active">
+                <model-viewer id="retro-computer" src="Media/3d/retro_computer.glb" alt="A 3D model of a retro computer" camera-controls disable-zoom></model-viewer>
                 <div class="grid-container">
                     <!-- 12 grid items with 4:3 aspect ratio as links -->
                     <a href="#" class="grid-item" data-page="sabauri">
