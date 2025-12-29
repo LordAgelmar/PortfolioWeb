@@ -405,6 +405,12 @@
             margin: 20px auto;
             line-height: 1.8;
         }
+        
+        /* Keep name together on line break */
+        .nowrap-name {
+            display: inline-block;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -423,7 +429,7 @@
         </div>
         
         <div class="site-title content-en" style="display: none;">
-            <p  class="project-title"><a href="#" data-page="home">Cinematographer Nikola Rabóvsky</a></p>
+            <p  class="project-title"><a href="#" data-page="home">Cinematographer <span class="nowrap-name">Nikola Rabóvsky</span></a></p>
         </div>
         
         <div class="contact-info">
