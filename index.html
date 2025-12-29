@@ -220,7 +220,7 @@
             }
             
             header {
-                padding: 100px 10px 20px; /* increased top padding to lower title and avoid overlap */
+                padding: 60px 10px 20px; /* reduced top padding */
                 height: auto;
                 flex-direction: column;
             }
@@ -244,19 +244,23 @@
                 height: 100%;
             }
             
-            /* Position contact-info in the top-right corner on mobile */
+            /* Position contact-info below title on mobile - centered */
             .contact-info {
-                right: 10px !important;
-                top: 10px;
+                position: static;
+                right: auto !important;
+                top: auto;
                 transform: none;
-                transform-origin: right top;
-                font-size: 1.2em; /* same as desktop */
+                transform-origin: center;
+                font-size: 1em; /* same size as project-text */
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: flex-end;
-                text-align: right;
+                align-items: center;
+                text-align: center;
                 height: auto;
+                margin-top: 15px;
+                margin-bottom: 30px;
+                width: 100%;
             }
             
             footer {
